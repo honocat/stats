@@ -1,4 +1,0 @@
-"0","HR <- read_csv('data/hr_data.csv')
-"
-"2","Error: 'data/hr_data.csv' does not exist in current working directory ('/Users/honocat/stats/econometrics').
-"

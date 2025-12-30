@@ -1,5 +1,0 @@
-"0","#| include: false"
-"0",""
-"0","if (knitr::is_latex_output()) {"
-"0","  knitr::opts_chunk$set(dev = 'cairo_pdf')"
-"0","}"
