@@ -1,0 +1,14 @@
+"0","smp_test_2 <- function(N = 10, level = 0.05, mu = 0, sigma = 1) {
+  ## 標本を抽出し、「母平均 = 0」という仮説を検定する関数
+  ## 引数: N = 標本サイズ
+  ##       level = 有意水準
+  ##       mu = 母平均
+  ##       sigma = 母標準偏差
+  smp <- rnorm(N, mean = mu, sd = sigma)
+  test <- t.test(smp)
+  judge <- abs(test$statistic) > abs(qt(p = level / 2, df = N = 1))
+"
+"2","Error: unexpected '=' in:
+""  test <- t.test(smp)
+  judge <- abs(test$statistic) > abs(qt(p = level / 2, df = N =""
+"

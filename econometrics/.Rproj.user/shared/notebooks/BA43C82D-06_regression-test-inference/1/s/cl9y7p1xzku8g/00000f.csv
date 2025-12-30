@@ -1,0 +1,8 @@
+"0","coef(fit2)[2] + c2 * summary(fit2)$coefficients[2, 2]
+"
+"1","    expm "
+"1","
+"
+"1","1.987246 "
+"1","
+"

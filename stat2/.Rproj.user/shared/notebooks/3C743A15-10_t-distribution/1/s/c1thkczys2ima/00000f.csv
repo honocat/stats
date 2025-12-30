@@ -1,0 +1,5 @@
+"0","  names(confint) <- c(str_c(level*100, ""%CIの下限値""),
+                      str_c(level*100, ""%CIの上限値""))
+"
+"2","Error: object 'level' not found
+"

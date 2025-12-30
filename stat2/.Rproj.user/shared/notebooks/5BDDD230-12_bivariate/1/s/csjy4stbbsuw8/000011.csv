@@ -1,0 +1,9 @@
+"0","myd |> 
+  filter(female == 'male') |>
+  with(cor(height, faheight)) |>
+  round(2)
+"
+"1","[1]"
+"1"," 0.81"
+"1","
+"

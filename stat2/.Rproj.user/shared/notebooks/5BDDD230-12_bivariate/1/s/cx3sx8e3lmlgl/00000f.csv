@@ -1,0 +1,7 @@
+"0","#| echo: false"
+"0","#| message:  false"
+"0",""
+"0","library(tidyverse)"
+"0","my_font <- 'HiraginoSans-W3'"
+"0","theme_set(theme_gray(base_size = 9,"
+"0","                     base_family = my_font))"

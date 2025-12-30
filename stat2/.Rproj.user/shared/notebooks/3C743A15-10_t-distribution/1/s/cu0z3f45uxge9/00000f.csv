@@ -1,0 +1,5 @@
+"0","smpl_1 <- sample(pop, size = 10, replece = FALSE)
+"
+"2","Error in sample(pop, size = 10, replece = FALSE) : 
+  unused argument (replece = FALSE)
+"

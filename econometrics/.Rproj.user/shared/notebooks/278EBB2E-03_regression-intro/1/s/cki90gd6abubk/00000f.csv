@@ -1,0 +1,8 @@
+"0","HR09 |>
+  filter(!is.na(expm)) |>
+  with(cov(voteshare, expm) / var(expm))
+"
+"1","[1]"
+"1"," 3.071721"
+"1","
+"

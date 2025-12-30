@@ -1,0 +1,1 @@
+{"frames":[],"message":"Error: unexpected '=' in:\n\"  test <- t.test(smp)\n  judge <- abs(test$statistic) > abs(qt(p = level / 2, df = N =\"\n"}

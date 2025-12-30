@@ -1,0 +1,8 @@
+"0","coef(fit1)[2] + c1 * summary(fit1)$coefficients[2, 2]
+"
+"1","experience "
+"1","
+"
+"1","  24.37557 "
+"1","
+"

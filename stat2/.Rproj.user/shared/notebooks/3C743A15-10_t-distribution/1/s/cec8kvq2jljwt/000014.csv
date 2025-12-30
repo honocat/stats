@@ -1,0 +1,8 @@
+"0","df_sim$z <- z"
+"0","h2 <- ggplot(df_sim, aes(x = z)) +"
+"0","  geom_histogram(binwidth = 0.5,"
+"0","                 color    = 'black',"
+"0","                 fill     = 'lightblue') +"
+"0","  labs(x = '母分散が既知の場合',"
+"0","       y = '度数')"
+"0","plot(h2)"

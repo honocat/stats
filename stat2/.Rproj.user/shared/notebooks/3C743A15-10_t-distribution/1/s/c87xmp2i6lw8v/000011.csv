@@ -1,0 +1,5 @@
+"0","for (i in 1 : n_sims) {"
+"0","  smpl <- sample(pop, size = N, replace = FALSE)"
+"0","  means[i] <- mean(smpl)"
+"0","  u[i] <- sd(smpl)"
+"0","}"

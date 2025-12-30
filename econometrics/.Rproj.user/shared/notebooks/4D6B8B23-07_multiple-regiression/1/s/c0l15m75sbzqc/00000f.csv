@@ -1,0 +1,4 @@
+"0","z1 <- unif(N, -5, 5)
+"
+"2","Error in unif(N, -5, 5) : could not find function ""unif""
+"
