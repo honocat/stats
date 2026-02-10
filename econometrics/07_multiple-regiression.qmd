@@ -444,3 +444,126 @@ plot(plt_extra)
 
 ### 処置後変数バイアス
 
+処置後変数バイアス（post treatment variable bias）とは、$y$の原因の1つであるが、主な説明変数（因果推論の文脈ではこれを処置変数[treatment variable]と呼ぶ）である$x$の結果でもあるような変数、つまり、$x$と$y$の関係を仲介するような変数である$z$や、$x$からも$y$からも影響を受ける合流点$z$を予測変数として使うことによって生じるバイアスである。処置後変数バイアスがあると、$x$が$y$に及ぼす効果を正しく推定することができない。
+
+
+以下のシミュレーションで、処置後変数バイアス（特に、媒介変数によるバイアス）を確認する。
+
+まず、$x$が$y$に与える効果を設定する。
+
+```{r}
+true_effect <- .25
+```
+
+次に、処置後変数を含むデータ生成過程を表す関数を作る。
+
+```{r}
+ptb_dgp <- function(n = 100) {
+  # 処置後変数バイアス問題をシミュレートする関数
+  x <- rbinom(n, size = 1, prob = .5)
+  z <- 0.3 + 0.2 * x + rnorm(n, mean = 0, sd = 0.1)
+  y <- 0.2 + (true_effect / 0.2) * z + rnorm(n, mean = 0, sd = 0.1)
+  return(tibble(y, x, z))
+}
+```
+
+試しにデータセットを1つ作る。
+
+```{r}
+set.seed(2025-12-30)
+df <- ptb_dgp()
+glimpse(df)
+```
+
+ここで、$x$と$z$の相関関係を確認する。
+
+```{r}
+with(df, cor(x, z))
+```
+
+$x$と$z$の間に正の相関があることがわかる。また、$y$と$z$については、
+
+```{r}
+with(df, cor(y, z))
+```
+
+となり、やはり正の相関を示している。
+
+そこで、「欠落変数バイアスを避けるために」（モチベーションは正しいが、方法が間違っている）、$z$を予測変数に含む以下のモデルを考える。
+
+$$
+y_i = \alpha + \beta x_i + \gamma z_i + u
+$$
+
+このモデルのパラメタを推定してみよう。
+
+```{r}
+fit_with <- lm(y ~ x + z, data = df)
+broom::tidy(fit_with)
+```
+
+推定値を見ると、`x`の係数$\beta$は過小推定されている。
+
+ここで、説明変数$z$を除外して、以下のモデルを考える。
+
+$$
+y_i = \alpha + \beta x_i + u
+$$
+
+このモデルのパラメタを推定する。
+
+```{r}
+fit_wo <- lm(y ~ x, data = df)
+broom::tidy(fit_wo)
+```
+
+統制すべきと考えていた$z$を除外したモデルなのに、$\beta$の推定値は設定したあたいである$0.25$に近い。これは偶然か？
+
+1回シミュレーションを実行し、処置後変数を含むモデルを含まないモデルの係数の推定値を返す関数を作る。
+
+```{r}
+sim_ptb <- function(true_effect = 0.25, n = 100) {
+  df <- ptb_dgp(n = n)
+  fit_with <- lm(y ~ x + z, data = df)
+  fit_wo <- lm(y ~ x, data = df)
+  betas <- c(coef(fit_with)[2], coef(fit_wo)[2])
+  names(betas) <- c('with', 'without')
+  return(betas)
+}
+```
+
+500回繰り返してみる。
+
+```{r}
+ptb_1 <- replicate(500, sim_ptb())
+```
+
+結果をヒストグラムで確認する。まず処置後変数を含む場合。
+
+```{r}
+dd <- tibble(with    = ptb_1[1,],
+             without = ptb_1[2,])
+hist_with <- ggplot(dd, aes(x = with, y = after_stat(density))) +
+  geom_histogram(color = 'black',
+                 bins  = 12) +
+  geom_vline(xintercept = true_effect,
+             color      = 'red') +
+  labs(x = '処置後変数を含むモデルの推定値',
+       y = '確率密度')
+plot(hist_with)
+```
+
+処置後変数を含まない場合。
+
+```{r}
+hist_wo <- ggplot(dd, aes(x = without, y = after_stat(density))) +
+  geom_histogram(color = 'black',
+                 bins  = 12) +
+  geom_vline(xintercept = true_effect,
+             color      = 'red') +
+  labs(x = '処置後変数を含まない（正しい）モデルの推定値',
+       y = '確率密度')
+plot(hist_wo)
+```
+
+このように、ある変数$x$の効果を推定したい時は、その変数の結果として出てくる変数を**統制してはいけない**。変数間に時間的な前後関係があれば、このバイアスを回避するのは比較的容易である。しかし、時間的な前後関係が不明なとき、ある変数が交絡変数か処置後変数かを見抜くのは難しい場合がある。統計モデルを作るときには、自分が統制する変数は交絡であり、処置後変数ではないことを理論的に示す必要がある。
